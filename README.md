@@ -53,11 +53,6 @@ MyDE utilizes the following core components:
 
 Contributions are welcome!  Please feel free to submit pull requests or open issues.
 
-## Screenshots
-
-![Screenshot 1](screenshots/screenshot1.png)
-![Screenshot 2](screenshots/screenshot2.jpg)
-
 ## TODO
 
 *   Implement support for more programming languages.
