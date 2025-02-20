@@ -75,9 +75,6 @@ class MyDE:
         self.status_label = tk.Label(self.editor_frame, text="", font=("Arial", 10, "bold"))
         self.status_label.pack()
 
-        self.insert_label = tk.Label(self.editor_frame, text="1.1", font=("Arial", 10, "bold"))
-        self.insert_label.pack()
-
         # Buttons Frame
         self.button_frame = tk.Frame(root)
         self.button_frame.pack(side='left', fill="x", pady=5)
@@ -92,8 +89,10 @@ class MyDE:
         self.search_button.pack(pady=5)
 
         # Console Output
-        self.console_output = tk.Text(root, height=10, wrap="word", font=("Courier New", 10), bg="#f0f0f0")
+        self.console_output_frame = tk.Frame(root)
+        self.console_output = tk.Text(self.console_output_frame, height=10, wrap="word", font=("Courier New", 10), bg="#f0f0f0")
         self.console_output.pack(fill="both", expand=True, padx=5, pady=5)
+        self.console_output_frame.pack(side="top", fill="both", expand=True)
 
         # Menu Bar
         self.menu_bar = tk.Menu(self.root)
@@ -101,9 +100,10 @@ class MyDE:
 
         # File Menu
         file_menu = tk.Menu(self.menu_bar, tearoff=0)
-        file_menu.add_command(label="New File", command=self.new_file)
+        file_menu.add_command(label="New File", command=self.create_new_file)
         file_menu.add_command(label="Open File", command=self.load_code)
         file_menu.add_command(label="Save File", command=self.save_code)
+        file_menu.add_command(label="Delete File", command=self.delete_file, foreground='red')
         self.menu_bar.add_cascade(label="File", menu=file_menu)
 
         # Edit Menu
@@ -111,8 +111,6 @@ class MyDE:
         edit_menu.add_command(label="Undo", command=self.text_editor.edit_undo)
         edit_menu.add_command(label="Redo", command=self.text_editor.edit_redo)
         edit_menu.add_command(label="Clear Console", command=self.clear_console)
-        edit_menu.add_command(label="Delete File", command=self.delete_file)
-        edit_menu.add_command(label="Rename File", command=self.clear_console)
         self.menu_bar.add_cascade(label="Edit", menu=edit_menu)
 
         # New Tab Menu
@@ -155,18 +153,19 @@ class MyDE:
         self.suggestion_box.bind("<Down>", self.navigate_suggestion(1))
         self.suggestion_box.bind("<Double-1>", self.insert_suggestion)
         self.suggestion_box.bind("<FocusOut>", self.unfocus_suggestion)
-        self.text_editor.bind("<Control-s>", lambda event: self.save_code())
-        self.text_editor.bind("<FocusIn>", lambda event: self.update_insert_lable())
-        self.text_editor.bind("<Control-f>", lambda event: self.search_in_editor())
         self.text_editor.bind("<Configure>", lambda event: self.highlight_syntax())
         self.text_editor.config(tabs=('1c',))
 
-        # Line numbers
-        self.line_numbers = LineNumbers(self.editor_frame, self.text_editor, bg="#e0e0e0")
-        self.line_numbers.pack(side=tk.LEFT, fill=tk.Y)
-        self.line_numbers.config(yscrollcommand=self.text_editor.yview())
+        self.text_editor.bind("<Control-f>", lambda event: self.search_in_editor())
+        self.text_editor.bind("<Control-s>", lambda event: self.save_code())
+        self.text_editor.bind("<Control-n>", lambda event: self.create_new_file())
+        self.text_editor.bind("<Control-Alt-F1>", lambda event: self.delete_file())
 
-        self.root.after(1, self.update_idle_tasks)  # Call update_idle_tasks every second
+        # Line numbers
+        self.line_numbers_text = LineNumbers(self.editor_frame, self.text_editor, bg="#e0e0e0")
+        self.line_numbers_text.pack(side=tk.LEFT, fill=tk.Y)
+        self.line_numbers_text.config(yscrollcommand=self.text_editor.yview())
+
 
     def highlight_syntax_errors_python(self, event=None):
         """Highlight lines with syntax errors."""
@@ -194,11 +193,6 @@ class MyDE:
         else:
             self.status_label.config(fg='black')
 
-    def update_idle_tasks(self, e=None):
-        """Update idle tasks."""
-
-        self.update_insert_lable()
-
     def focus_suggestion(self, event):
         """focus the suggestion listbox."""
 
@@ -219,22 +213,12 @@ class MyDE:
         self.show_suggestions(event)
         self.auto_bracket(event)
         self.auto_tab(event)
-        self.line_numbers.redraw()
-        self.update_insert_lable()
+        self.line_numbers_text.redraw()
 
     def on_key_press(self, event):
         """Track the last key pressed."""
 
         self.last_key_pressed = event.keysym  # Store the last key pressed
-
-    def update_insert_lable(self):
-        """update the insert label with the current cursor position."""
-
-        self.text_editor.tag_remove('highlight', '0.1', tk.END)
-        self.insert_label.config(text=self.text_editor.index('insert'))
-        line_start = self.text_editor.index('insert linestart')
-        line_end = self.text_editor.index('insert lineend + 1c')
-        self.text_editor.tag_add('highlight', line_start, line_end)
 
     def auto_bracket(self, event):
         """Automatically add closing bracket or quote."""
@@ -410,10 +394,11 @@ class MyDE:
 
     def delete_file(self):
         """Delete the current file."""
-        os.remove(self.current_file_path)
-        self.update_directory_panel(os.path.dirname(self.current_file_path))
-        self.current_file_path = None
-        self.change_file()
+        if tk.messagebox.askyesno(f"Delete File", f"Are you sure you want to delete {self.current_file_path}?"):
+            os.remove(self.current_file_path)
+            self.update_directory_panel(os.path.dirname(self.current_file_path))
+            self.current_file_path = None
+            self.change_file()
 
     def change_file(self):
         """Change the current file."""
@@ -426,6 +411,7 @@ class MyDE:
                 self.run_button.config(state="normal")
             else:
                 self.run_button.config(state="disabled")
+            self.dir_listbox.update()
         else:
             self.file_label.config(text='')
             self.text_editor.pack_forget()
@@ -526,6 +512,7 @@ class MyDE:
             args = [executable, self.current_file_path]
             self.current_process = subprocess.Popen(
                 args,
+                cwd=self.current_dir,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True
@@ -594,12 +581,6 @@ class MyDE:
         file_path = filedialog.askopenfilename(filetypes=[("Python files", "*.py")])
         if file_path:
             self.load_file(file_path)
-
-    def new_file(self):
-        """Create a new file"""
-        self.text_editor.delete("1.0", tk.END)
-        self.current_file_path = None
-        self.change_file()
 
     def clear_console(self):
         """Clear the console output."""
@@ -971,6 +952,7 @@ class LineNumbers(tk.Canvas):
         super().__init__(master, width=60, highlightthickness=0, **kwargs)
         self.textwidget = textwidget
         self.textwidget.bind("<MouseWheel>", self.redraw)
+        self.textwidget.bind("<Configure>", self.redraw)
         self.numbers = []
 
     def redraw(self, event=None):
@@ -1005,3 +987,13 @@ if __name__ == "__main__":
             root.mainloop()
         except Exception as e:
             tk.messagebox.showerror('Error', f'An error has occurred if \n{e}')
+
+
+
+
+
+
+
+
+
+
