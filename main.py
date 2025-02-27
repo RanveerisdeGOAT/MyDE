@@ -160,6 +160,8 @@ class MyDE:
         self.text_editor.bind("<Control-s>", lambda event: self.save_code())
         self.text_editor.bind("<Control-n>", lambda event: self.create_new_file())
         self.text_editor.bind("<Control-Alt-F1>", lambda event: self.delete_file())
+        self.text_editor.bind("<Control-F6>", lambda event: self.run_code())
+        self.console_output.bind("Control-C", lambda event: self.kill_process())
 
         # Line numbers
         self.line_numbers_text = LineNumbers(self.editor_frame, self.text_editor, bg="#e0e0e0")
