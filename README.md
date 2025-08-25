@@ -4,7 +4,7 @@ A custom Integrated Development Environment (IDE) built with Python and Tkinter.
 
 ## How It Works
 
-MyDE utilizes the following core components:
+MyDE utilises the following core components:
 
 *   **Text Editor:**
     *   `tk.ScrolledText`:  Provides a scrollable text area for displaying and editing code files.
