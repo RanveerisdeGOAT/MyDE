@@ -2,6 +2,8 @@
 
 A custom Integrated Development Environment (IDE) built with Python and Tkinter.
 
+---
+
 ## How It Works
 
 MyDE utilises the following core components:
@@ -21,6 +23,8 @@ MyDE utilises the following core components:
 *   **Cross-Platform Support:**
     *   MyDE is designed to be cross-platform, leveraging Tkinter's inherent cross-platform capabilities.
 
+---
+
 ## Features
 
 *   Syntax highlighting for various programming languages (configurable).
@@ -28,9 +32,11 @@ MyDE utilises the following core components:
 *   Support for running Python and HTML files directly from the editor.
 *   Clean and user-friendly interface. (I think) ;)
 
+---
+
 ## Getting Started
 
-1.  **Prerequisites:**
+1.  **Requirements:**
     *   Python 3.x
     *   Tkinter (usually included with Python)
 
@@ -41,6 +47,8 @@ MyDE utilises the following core components:
 3.  **Running MyDE:**
     *   Run the main script: `python main.py`
 
+---
+
 ## Usage
 
 1.  Open a file using the "File" menu.
@@ -49,9 +57,13 @@ MyDE utilises the following core components:
 4.  Run the code.
 5.  Interact with the running program in the integrated console.
 
+---
+
 ## Contributing
 
 Contributions are welcome!  Please feel free to submit pull requests or open issues.
+
+---
 
 ## TODO
 
@@ -60,6 +72,8 @@ Contributions are welcome!  Please feel free to submit pull requests or open iss
 *   Improve syntax highlighting.
 *   Implement a more robust file management system.
 *   Create a settings/configuration dialog.
+
+---
 
 <br>
 MyDE 2025<br>
