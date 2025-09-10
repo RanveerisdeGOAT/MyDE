@@ -60,3 +60,9 @@ Contributions are welcome!  Please feel free to submit pull requests or open iss
 *   Improve syntax highlighting.
 *   Implement a more robust file management system.
 *   Create a settings/configuration dialog.
+
+<br>
+MyDE 2025<br>
+Author: @RanveerisdeGOAT,<br>
+Co-Authors: Deepseek, Gemini, ChatGPT ;)<br>
+Open source: Free to use, modify and improve: https://github.com/RanveerisdeGOAT?tab=repositories
