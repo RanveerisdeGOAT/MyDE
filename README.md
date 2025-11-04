@@ -32,6 +32,8 @@ MyDE utilises the following core components:
 *   Support for running Python and HTML files directly from the editor.
 *   Clean and user-friendly interface. (I think) ;)
 
+![Sccreenshot](Screenshot1.png)
+
 ---
 
 ## Getting Started
